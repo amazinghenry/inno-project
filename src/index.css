@@ -1,8 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
 /* Box sizing rules */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+:root {
+  --pri-clr: #342BD6;
+  --sec-clr: #F79400;
 }
 
 /* Prevent font size inflation */
@@ -26,8 +33,12 @@ ol[role='list'] {
 
 /* Set core body defaults */
 body {
+  color: #6b6b6b;
+  background-color: #fff;
+  font-size: 14px;
   min-height: 100vh;
   line-height: 1.5;
+  font-family: 'Nunito Sans', 'sans-serif';
 }
 
 /* Set shorter line heights on headings and interactive elements */
@@ -69,4 +80,8 @@ textarea:not([rows]) {
 /* Anything that has been anchored to should have extra scroll margin */
 :target {
   scroll-margin-block: 5ex;
+}
+
+.container-fluid {
+  padding: 0px;
 }

@@ -5,20 +5,20 @@ import Product from "./pages/product/Product";
 import Cart from "./pages/cart/Cart";
 import Checkout from "./pages/checkout/Checkout";
 import Dashboard from "./pages/dashboard/Dashboard";
-
-
+import About from "./pages/about/About";
 
 const AppRoutes = () => {
-    return ( 
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/store" element={<Store />} />
-            <Route path="/store/:productId" element={<Product />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-    );
-}
- 
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/store" element={<Store />} />
+      <Route path="/store/:productId" element={<Product />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/checkout" element={<Checkout />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+    </Routes>
+  );
+};
+
 export default AppRoutes;

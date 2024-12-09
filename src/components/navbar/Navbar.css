@@ -1,0 +1,28 @@
+nav {
+    background-color: #fff;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+}
+
+.nav-logo {
+    font-weight: 700;
+    color: rgb(17, 149, 149);
+    text-decoration: none;
+}
+
+.link-item {
+    text-decoration: none;
+    color: #6a6a6a;
+    margin: 0 8px;
+    font-weight: 600;
+}
+
+.nav-login-button, .nav-cart-button {
+    text-decoration: none;
+    margin: 0 8px;
+}

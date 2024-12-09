@@ -3,10 +3,12 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { useCart } from "../../context/CartContext"; // Import useCart
 
 const Product = () => {
-  const { productId } = useParams(); // Get product ID from the URL
+  const { productId } = useParams();
   const [product, setProduct] = useState(null);
+  const { dispatch } = useCart(); // Access the dispatch function from the CartContext
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -25,6 +27,13 @@ const Product = () => {
     fetchProduct();
   }, [productId]);
 
+  const addToCart = () => {
+    dispatch({
+      type: "ADD_TO_CART",
+      payload: { id: productId, ...product }, // Include product ID and data
+    });
+  };
+
   if (!product) return <div>Loading...</div>;
 
   return (
@@ -32,7 +41,7 @@ const Product = () => {
       <h1>{product.title}</h1>
       <p>{product.description}</p>
       <p>Price: ${product.price}</p>
-      <button>Add to Cart</button>
+      <button onClick={addToCart}>Add to Cart</button>
     </div>
   );
 };
