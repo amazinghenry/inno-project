@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../../firebase"; // Import Firebase auth instance
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./PasswordReset.css";
 
 const PasswordReset = () => {
@@ -35,32 +36,31 @@ const PasswordReset = () => {
 
   return (
     <div className="forgot-password-container">
-      <h2>Forgot Password</h2>
-      <p>Enter your email to receive a password reset link.</p>
-      <form onSubmit={handleSubmit} className="forgot-password-form">
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        {error && <p className="error-message">{error}</p>}
-        {message && <p className="success-message">{message}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="forgot-password-button"
-        >
-          {loading ? "Sending..." : "Send Reset Link"}
-        </button>
-      </form>
-      <button
-        onClick={() => navigate("/login")}
-        className="back-to-login-button"
-      >
-        Back to Login
-      </button>
+      <div className="reset-password-group container">
+        <h2>Reset Password</h2>
+        <p>Enter your email to receive a password reset link.</p>
+        <form onSubmit={handleSubmit} className="forgot-password-form">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          {error && <p className="error-message">{error}</p>}
+          {message && <p className="success-message">{message}</p>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="forgot-password-button"
+          >
+            {loading ? "Sending..." : "Send Reset Link"}
+          </button>
+        </form>
+        <Link to="/login" className="back-to-login-button">
+          Back to Login
+        </Link>
+      </div>
     </div>
   );
 };

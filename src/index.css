@@ -10,6 +10,7 @@
 :root {
   --pri-clr: #342BD6;
   --sec-clr: #F79400;
+  --blue-bg: #F9FBFF;
 }
 
 /* Prevent font size inflation */

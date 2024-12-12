@@ -3,6 +3,7 @@ import { db } from "../../firebase";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import Users from "../users/Users"; // Import Users Component
 import Overview from "../overview/Overview"; // Import Overview Component
+import Orders from "../orders/Orders";
 import "./AdminDashboard.css";
 
 // Placeholder Components for Views
@@ -42,7 +43,7 @@ const Products = ({ products, handleDelete }) => (
   </div>
 );
 
-const Orders = () => <div>View and manage orders here!</div>;
+// const Orders = () => <div>View and manage orders here!</div>;
 
 const AdminDashboard = () => {
   const [activeView, setActiveView] = useState("Overview"); // Current view
@@ -105,7 +106,7 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard-container">
       {/* Sidebar */}
-      <aside className="sidebar">
+      <aside className="admin-dashboard-sidebar">
         <h2 className="logo text-light">MyAdmin</h2>
         <ul className="menu">
           <li
@@ -136,7 +137,7 @@ const AdminDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="main-content">
+      <main className="admin-dashboard-main-content">
         {loading && activeView === "Products" ? (
           <p>Loading products...</p>
         ) : (

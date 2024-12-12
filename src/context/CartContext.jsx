@@ -75,13 +75,14 @@ export const CartProvider = ({ children }) => {
 
   // Clear Cart
   const clearCart = async () => {
-    if (!currentUser) return;
-    try {
-      setCart({ items: [] });
-      const cartRef = doc(db, "carts", currentUser.uid);
-      await updateDoc(cartRef, { items: [] });
-    } catch (error) {
-      console.error("Error clearing cart:", error.message);
+    setCart({ items: [] }); // Clear local cart state
+    if (currentUser) {
+      try {
+        const cartRef = doc(db, "carts", currentUser.uid);
+        await updateDoc(cartRef, { items: [] }); // Clear Firestore cart
+      } catch (error) {
+        console.error("Error clearing cart:", error.message);
+      }
     }
   };
 

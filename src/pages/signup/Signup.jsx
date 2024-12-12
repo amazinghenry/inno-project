@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase"; // Import Firebase auth and Firestore
+import loginImage from "../../assets/login-image.png";
+import { Link } from "react-router-dom";
 import "./Signup.css";
 
 const Signup = () => {
@@ -87,52 +89,72 @@ const Signup = () => {
 
   return (
     <div className="signup-container">
-      <h2>Signup</h2>
-      <form onSubmit={handleSubmit} className="signup-form">
-        {/* Display Name */}
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="Display Name (Optional)"
-            value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
-          />
+      <div className="signup-group">
+        <div className="signup-item-image">
+          <img src={loginImage} alt="" className="img-fluid" />
         </div>
 
-        {/* Email */}
-        <div className="form-group">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          {errors.email && <p className="error-message">{errors.email}</p>}
+        <div className="signup-item-form">
+          <h2>Create account</h2>
+          <form onSubmit={handleSubmit} className="signup-form">
+            {/* Display Name */}
+            <div className="form-group">
+              <input
+                type="text"
+                placeholder="Display Name"
+                required
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+              />
+            </div>
+
+            {/* Email */}
+            <div className="form-group">
+              <input
+                type="email"
+                placeholder="Email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              {errors.email && <p className="error-message">{errors.email}</p>}
+            </div>
+
+            {/* Password */}
+            <div className="form-group">
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {errors.password && (
+                <p className="error-message">{errors.password}</p>
+              )}
+            </div>
+
+            {/* General Errors */}
+            {errors.general && (
+              <p className="error-message">{errors.general}</p>
+            )}
+
+            {/* Success Message */}
+            {successMessage && (
+              <p className="success-message">{successMessage}</p>
+            )}
+
+            <button type="submit" disabled={loading} className="signup-button">
+              {loading ? "Creating Account..." : "Sign up"}
+            </button>
+          </form>
+          <p className="have-account">
+            Have an account?
+            <Link to="/login" className="login-link">
+              Sign in
+            </Link>
+          </p>
         </div>
-
-        {/* Password */}
-        <div className="form-group">
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {errors.password && (
-            <p className="error-message">{errors.password}</p>
-          )}
-        </div>
-
-        {/* General Errors */}
-        {errors.general && <p className="error-message">{errors.general}</p>}
-
-        {/* Success Message */}
-        {successMessage && <p className="success-message">{successMessage}</p>}
-
-        <button type="submit" disabled={loading} className="signup-button">
-          {loading ? "Creating Account..." : "Signup"}
-        </button>
-      </form>
+      </div>
     </div>
   );
 };

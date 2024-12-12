@@ -37,7 +37,7 @@ const Users = () => {
       {loading ? (
         <p>Loading users...</p>
       ) : users.length > 0 ? (
-        <table>
+        <table className="users-container-table">
           <thead>
             <tr>
               <th>ID</th>

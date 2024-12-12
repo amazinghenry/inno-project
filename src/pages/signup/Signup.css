@@ -1,16 +1,26 @@
 .signup-container {
-  max-width: 400px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
+  /* max-width: 400px; */
+  background-color: var(--blue-bg);
+  padding: 80px 0;
   border-radius: 8px;
-  text-align: center;
 }
 
-.signup-form .form-group {
-  margin-bottom: 1rem;
+.signup-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.signup-item-form {
+  width: 400px;
+}
+
+.signup-item-form h2 {
+  margin-bottom: 20px;
+  color: var(--pri-clr);
+  font-weight: 600;
+}
+
 
 .signup-form input {
   width: 100%;
@@ -29,10 +39,23 @@
   font-size: 0.9rem;
 }
 
+.have-account {
+  margin-top: 20px;
+  text-align: center;
+}
+
+
+.login-link {
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--pri-clr);
+  margin-left: 5px;
+}
+
 .signup-button {
   width: 100%;
   padding: 10px;
-  background-color: #007bff;
+  background-color: var(--pri-clr);
   color: white;
   border: none;
   border-radius: 5px;

@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
+import loginImage from "../../assets/login-image.png";
 
 import "./Login.css";
 
@@ -78,47 +79,58 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <h2>Login</h2>
-
-      {/* Form for Email/Password */}
-      <form onSubmit={handleSubmit} className="login-form">
-        <div className="form-group">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          {errors.email && <p className="error-message">{errors.email}</p>}
+      <div className="login-group container">
+        <div className="login-item-image">
+          <img src={loginImage} alt="" className="img-fluid" />
         </div>
+        <div className="login-item-form">
+          <h2>Welcome back!</h2>
+          <form onSubmit={handleSubmit} className="login-form">
+            <div className="form-group">
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              {errors.email && <p className="error-message">{errors.email}</p>}
+            </div>
 
-        <div className="form-group">
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {errors.password && (
-            <p className="error-message">{errors.password}</p>
-          )}
+            <div className="form-group">
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {errors.password && (
+                <p className="error-message">{errors.password}</p>
+              )}
+            </div>
+
+            {errors.auth && (
+              <p className="error-message auth-error">{errors.auth}</p>
+            )}
+
+            <button type="submit" disabled={loading} className="login-button">
+              {loading ? "Logging in..." : "Login"}
+            </button>
+            <Link to="/password-reset" className="password-reset-button">
+              Forgot Password?
+            </Link>
+          </form>
+          {/* Google Sign-In Button */}
+          <button onClick={handleGoogleSignIn} className="google-button">
+            <FcGoogle /> Continue with Google
+          </button>
+          <p className="no-account">
+            Don't have an account?
+            <Link to="/signup" className="signup-link">
+              Sign up for free
+            </Link>
+          </p>
         </div>
-
-        {errors.auth && (
-          <p className="error-message auth-error">{errors.auth}</p>
-        )}
-
-        <button type="submit" disabled={loading} className="login-button">
-          {loading ? "Logging in..." : "Login"}
-        </button>
-        <Link to="/password-reset">Forgot Password?</Link>
-      </form>
-
-      {/* Google Sign-In Button */}
-      <button onClick={handleGoogleSignIn} className="google-button">
-        <FcGoogle /> Login with Google
-      </button>
-      <Link to="/signup">Don't have an account? create an account</Link>
+      </div>
     </div>
   );
 };

@@ -2,7 +2,7 @@
 
 .store-section {
   padding: 40px 0;
-  background-color: #F9FBFF;
+  background-color: var(--blue-bg);
 }
 
 .store-container {

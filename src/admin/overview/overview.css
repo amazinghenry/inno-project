@@ -2,13 +2,13 @@
     padding: 20px;
     background-color: #f8f9fa;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
   }
   
-  h2 {
+  .overview-container h2 {
     font-size: 1.8rem;
     margin-bottom: 20px;
-    color: #333;
+    color: #6b6b6b;
   }
   
   .stats-grid {
@@ -21,7 +21,7 @@
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     text-align: center;
     transition: transform 0.3s;
   }
@@ -32,12 +32,12 @@
   
   .stats-card h3 {
     font-size: 1.2rem;
-    color: #007bff;
+    color: var(--pri-clr);
     margin-bottom: 10px;
   }
   
   .stats-card p {
     font-size: 2rem;
     font-weight: bold;
-    color: #333;
+    color: #6b6b6b;
   }

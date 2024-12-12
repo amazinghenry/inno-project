@@ -1,5 +1,5 @@
 .homepage-container {
-  background-color: #F9FBFF;
+  background-color: var(--blue-bg);
 }
 
 .hero-group {
