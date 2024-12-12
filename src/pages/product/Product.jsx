@@ -8,8 +8,9 @@ import { useCart } from "../../context/CartContext"; // Import useCart
 const Product = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
-  const { dispatch } = useCart(); // Access the dispatch function from the CartContext
+  const { addToCart } = useCart(); // Use the addToCart function instead of dispatch
 
+  // Fetch product data from Firestore
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -27,21 +28,26 @@ const Product = () => {
     fetchProduct();
   }, [productId]);
 
-  const addToCart = () => {
-    dispatch({
-      type: "ADD_TO_CART",
-      payload: { id: productId, ...product }, // Include product ID and data
-    });
+  // Add product to cart
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart({ id: productId, ...product }); // Use the correct addToCart function
+    }
   };
 
   if (!product) return <div>Loading...</div>;
 
   return (
-    <div className="product-detail">
-      <h1>{product.title}</h1>
-      <p>{product.description}</p>
-      <p>Price: ${product.price}</p>
-      <button onClick={addToCart}>Add to Cart</button>
+    <div className="product-detail-container">
+      <div className="product-detail-group">
+        <img src={product.image} alt={product.title} className="img-fluid" />
+        <div className="product-detail container">
+          <h2>{product.title}</h2>
+          <p>{product.description}</p>
+          <p>Price: ${product.price}</p>
+          <button onClick={handleAddToCart}>Add to Cart</button>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,66 +1,103 @@
-// src/context/CartContext.jsx
-import React, { createContext, useContext, useReducer } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { db } from "../firebase";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { useAuth } from "./AuthContext";
 
-// Create the CartContext
 const CartContext = createContext();
 
-// Custom hook to use the CartContext
 export const useCart = () => useContext(CartContext);
 
-// Initial state for the cart
-const initialState = {
-  items: [],
-};
+export const CartProvider = ({ children }) => {
+  const [cart, setCart] = useState({ items: [] });
+  const { currentUser } = useAuth();
 
-// Reducer function to handle cart actions
-const cartReducer = (state, action) => {
-  switch (action.type) {
-    case "ADD_TO_CART":
-      // Check if the product is already in the cart
-      const existingItem = state.items.find(
-        (item) => item.id === action.payload.id
+  // Fetch cart data from Firestore
+  const fetchCart = async (userId) => {
+    if (!userId) return;
+    try {
+      const cartRef = doc(db, "carts", userId);
+      const cartDoc = await getDoc(cartRef);
+      if (cartDoc.exists()) {
+        setCart({ items: cartDoc.data().items || [] });
+      } else {
+        setCart({ items: [] });
+      }
+    } catch (error) {
+      console.error("Error fetching cart:", error.message);
+    }
+  };
+
+  // Save cart to Firestore
+  const saveCartToFirestore = async (updatedItems) => {
+    if (!currentUser) return;
+    try {
+      const cartRef = doc(db, "carts", currentUser.uid);
+      await setDoc(cartRef, { items: updatedItems }, { merge: true });
+    } catch (error) {
+      console.error("Error saving cart:", error.message);
+    }
+  };
+
+  // Add to Cart (check for duplicates)
+  const addToCart = (product) => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.items.find(
+        (item) => item.id === product.id
       );
 
+      let updatedItems;
       if (existingItem) {
-        // Update the quantity if the item exists
-        return {
-          ...state,
-          items: state.items.map((item) =>
-            item.id === action.payload.id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          ),
-        };
+        updatedItems = prevCart.items.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: (item.quantity || 1) + 1 }
+            : item
+        );
       } else {
-        // Add the item to the cart
-        return {
-          ...state,
-          items: [...state.items, { ...action.payload, quantity: 1 }],
-        };
+        updatedItems = [...prevCart.items, { ...product, quantity: 1 }];
       }
 
-    case "REMOVE_FROM_CART":
-      // Remove the item from the cart
-      return {
-        ...state,
-        items: state.items.filter((item) => item.id !== action.payload),
-      };
+      saveCartToFirestore(updatedItems);
+      return { items: updatedItems };
+    });
+  };
 
-    case "CLEAR_CART":
-      // Clear the cart
-      return initialState;
+  // Remove from Cart
+  const removeFromCart = (productId) => {
+    if (!productId) return; // Guard clause for invalid productId
+    setCart((prevCart) => {
+      const updatedItems = prevCart.items.filter(
+        (item) => item.id !== productId
+      );
+      saveCartToFirestore(updatedItems);
+      return { items: updatedItems };
+    });
+  };
 
-    default:
-      return state;
-  }
-};
+  // Clear Cart
+  const clearCart = async () => {
+    if (!currentUser) return;
+    try {
+      setCart({ items: [] });
+      const cartRef = doc(db, "carts", currentUser.uid);
+      await updateDoc(cartRef, { items: [] });
+    } catch (error) {
+      console.error("Error clearing cart:", error.message);
+    }
+  };
 
-// CartProvider to wrap the app and provide cart state
-export const CartProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(cartReducer, initialState);
+  // Sync cart when user logs in
+  useEffect(() => {
+    if (currentUser) {
+      fetchCart(currentUser.uid);
+    } else {
+      setCart({ items: [] }); // Clear cart if user logs out
+    }
+  }, [currentUser]);
 
   return (
-    <CartContext.Provider value={{ cart: state, dispatch }}>
+    <CartContext.Provider
+      value={{ cart, addToCart, removeFromCart, clearCart }}
+    >
       {children}
     </CartContext.Provider>
   );
