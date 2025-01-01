@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { reload } from "firebase/auth";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { updateProfile } from "firebase/auth";
@@ -49,6 +50,7 @@ const Signup = () => {
   };
 
   // Handle form submission
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({ email: "", password: "", general: "" });
@@ -57,23 +59,12 @@ const Signup = () => {
 
     setLoading(true);
     try {
-      // Create user with Firebase Authentication
-      const userCredential = await signup(email, password);
-      const user = userCredential.user;
+      // Call signup and safely access userCredential
+      const userCredential = await signup(email, password, displayName);
 
-      // Set display name
-      if (displayName) {
-        await updateProfile(user, { displayName });
+      if (!userCredential || !userCredential.user) {
+        throw new Error("User creation failed. Please try again.");
       }
-
-      // Save user details to Firestore with default role
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
-        displayName: displayName || "New User",
-        email: user.email,
-        role: "user", // Default role is 'user'
-        createdAt: new Date(),
-      });
 
       setSuccessMessage("Account created successfully!");
       setTimeout(() => navigate("/"), 2000); // Redirect after 2 seconds
@@ -81,12 +72,11 @@ const Signup = () => {
       console.error("Error signing up:", error.message);
       setErrors((prev) => ({
         ...prev,
-        general: "Failed to create an account. Please try again.",
+        general: `Failed to create an account: ${error.message}`,
       }));
     }
     setLoading(false);
   };
-
   return (
     <div className="signup-container">
       <div className="signup-group">

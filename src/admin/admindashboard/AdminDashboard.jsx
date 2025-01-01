@@ -1,91 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { db } from "../../firebase";
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import React, { useState } from "react";
 import Users from "../users/Users"; // Import Users Component
 import Overview from "../overview/Overview"; // Import Overview Component
-import Orders from "../orders/Orders";
+import Orders from "../orders/Orders"; // Import Orders Component
+import AdminProduct from "../products/AdminProduct"; // Import AdminProduct Component
+import AddProduct from "../addproduct/AddProduct"; // Import AddProduct Component
 import "./AdminDashboard.css";
-
-// Placeholder Components for Views
-// const Overview = () => <div>Welcome to the Overview!</div>;
-
-const Products = ({ products, handleDelete }) => (
-  <div>
-    <h2>All Products</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Title</th>
-          <th>Price</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {products.map((product) => (
-          <tr key={product.id}>
-            <td>{product.id}</td>
-            <td>{product.title}</td>
-            <td>${product.price}</td>
-            <td>
-              <button
-                onClick={() => handleDelete(product.id)}
-                className="delete-button"
-              >
-                Delete
-              </button>
-              <button className="edit-button">Edit</button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-);
-
-// const Orders = () => <div>View and manage orders here!</div>;
 
 const AdminDashboard = () => {
   const [activeView, setActiveView] = useState("Overview"); // Current view
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [successMessage, setSuccessMessage] = useState(""); // For success messages
 
-  // Fetch products
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      const productsRef = collection(db, "products");
-      const productSnap = await getDocs(productsRef);
-      const productList = productSnap.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setProducts(productList);
-    } catch (error) {
-      console.error("Error fetching products:", error.message);
-    }
-    setLoading(false);
+  // Callback function to handle product added
+  const handleProductAdded = () => {
+    setSuccessMessage("Product added successfully!");
+    setActiveView("Products"); // Switch back to the Products view after adding
+
+    // Clear success message after a delay
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 3000);
   };
-
-  // Delete a product
-  const handleDelete = async (productId) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this product?"
-    );
-    if (!confirmDelete) return;
-
-    try {
-      await deleteDoc(doc(db, "products", productId));
-      setProducts((prev) => prev.filter((product) => product.id !== productId));
-      alert("Product deleted successfully!");
-    } catch (error) {
-      console.error("Error deleting product:", error.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
 
   // Render Content Dynamically
   const renderView = () => {
@@ -93,9 +27,11 @@ const AdminDashboard = () => {
       case "Overview":
         return <Overview />;
       case "Products":
-        return <Products products={products} handleDelete={handleDelete} />;
+        return <AdminProduct />; // No props needed; AdminProduct handles its own logic
+      case "AddProduct":
+        return <AddProduct onProductAdded={handleProductAdded} />; // Pass callback to AddProduct
       case "Users":
-        return <Users />; // Renders imported Users component
+        return <Users />;
       case "Orders":
         return <Orders />;
       default:
@@ -122,6 +58,14 @@ const AdminDashboard = () => {
             Products
           </li>
           <li
+            className={`menu-item ${
+              activeView === "AddProduct" ? "active" : ""
+            }`}
+            onClick={() => setActiveView("AddProduct")}
+          >
+            Add Product
+          </li>
+          <li
             className={`menu-item ${activeView === "Users" ? "active" : ""}`}
             onClick={() => setActiveView("Users")}
           >
@@ -138,11 +82,11 @@ const AdminDashboard = () => {
 
       {/* Main Content */}
       <main className="admin-dashboard-main-content">
-        {loading && activeView === "Products" ? (
-          <p>Loading products...</p>
-        ) : (
-          renderView()
+        {/* Success Message */}
+        {successMessage && (
+          <div className="success-message">{successMessage}</div>
         )}
+        {renderView()}
       </main>
     </div>
   );

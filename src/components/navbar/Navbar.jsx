@@ -10,13 +10,13 @@ const NavBar = () => {
   const { cart } = useCart();
   const { currentUser, role, logout } = useAuth();
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (error) {
-      console.error("Error logging out:", error.message);
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     await logout();
+  //   } catch (error) {
+  //     console.error("Error logging out:", error.message);
+  //   }
+  // };
 
   return (
     <nav className="container-fluid nav-main">
@@ -64,15 +64,15 @@ const NavBar = () => {
             <LuUserRound className="user-icon" />
             {currentUser ? (
               <div className="user-dropdown">
-                <span className="user-name">
+                <Link to="/dashboard" className="user-name">
                   Hi, {currentUser.displayName || "User"}
-                </span>
-                <button onClick={handleLogout} className="nav-logout-button">
+                </Link>
+                {/* <button onClick={handleLogout} className="nav-logout-button">
                   Logout
-                </button>
+                </button> */}
               </div>
             ) : (
-              <Link to="/login" className="nav-login-button">
+              <Link to="/login" className="nav-login-link">
                 Login
               </Link>
             )}

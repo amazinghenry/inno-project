@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
 import "./Users.css";
 
@@ -25,6 +25,27 @@ const Users = () => {
       console.error("Error fetching users:", error.message);
     }
     setLoading(false);
+  };
+
+  // Delete user from Firestore
+  const handleDelete = async (userId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this user?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      // Delete the user document from Firestore
+      await deleteDoc(doc(db, "users", userId));
+
+      // Update local state to remove the user
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+
+      alert("User deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting user:", error.message);
+      alert("Failed to delete user. Please try again.");
+    }
   };
 
   useEffect(() => {
@@ -63,7 +84,7 @@ const Users = () => {
                   </button>
                   <button
                     className="delete-button"
-                    onClick={() => alert(`Delete ${user.displayName}`)}
+                    onClick={() => handleDelete(user.id)}
                   >
                     Delete
                   </button>

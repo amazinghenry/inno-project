@@ -16,6 +16,7 @@
   font-weight: 800;
   color: var(--pri-clr);
   margin-bottom: 20px;
+  text-align: left;
 }
 
 .hero-item p {

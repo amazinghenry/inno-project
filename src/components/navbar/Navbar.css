@@ -30,6 +30,16 @@ nav {
     gap: 16px;
 }
 
+.nav-login-link {
+    text-decoration: none;
+    color: #6a6a6a;
+    font-weight: 600;
+}
+
+.nav-login-link:hover {
+    color: var(--sec-clr);
+}
+
 .link-item {
     text-decoration: none;
     color: #6a6a6a;
@@ -64,7 +74,7 @@ nav {
 }
 
 .cart-count {
-    background-color: #F79400;
+    background-color: var(--sec-clr);
     color: #fff;
     font-size: 0.8rem;
     text-align: center;
@@ -75,7 +85,7 @@ nav {
 
 /* User Login Group */
 .nav-login-group {
-    border: 1px solid #F79400;
+    border: 1px solid var(--sec-clr);
     padding: 8px 16px;
     border-radius: 5px;
     display: flex;
@@ -84,37 +94,10 @@ nav {
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.nav-login-group:hover {
-    background-color: #F79400;
-    border-color: #F79400;
-    color: #fff;
-}
-
 .nav-login-button {
     color: #6b6b6b;
     text-decoration: none;
 }
-
-.nav-login-button:hover {
-    color: #fff;
-}
-
-/* .nav-login-button,
-.nav-logout-button {
-    background-color: var(--pri-clr);
-    color: #fff;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-} */
-
-/* .nav-login-button:hover,
-.nav-logout-button:hover {
-    background-color: #251F98;
-} */
 
 /* User Name */
 .user-name {
@@ -125,10 +108,8 @@ nav {
 }
 
 .user-name:hover {
-    color: #fff;
-    text-decoration: none;
+    color: var(--sec-clr);
 }
-
 
 /* Nav Right Group */
 .nav-right-group {

@@ -28,6 +28,8 @@ export const AuthProvider = ({ children }) => {
       password
     );
     const user = userCredential.user;
+
+    // Update display name
     await updateProfile(user, { displayName });
 
     // Save user to Firestore
@@ -41,6 +43,9 @@ export const AuthProvider = ({ children }) => {
 
     setCurrentUser(user);
     setRole("user");
+
+    // Return userCredential
+    return userCredential; // <-- Important!
   };
 
   // Login User

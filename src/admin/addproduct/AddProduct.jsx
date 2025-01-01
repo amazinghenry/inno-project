@@ -1,112 +1,147 @@
 import React, { useState } from "react";
-import { db } from "../../firebase"; // Firestore instance
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 import "./AddProduct.css";
 
 const AddProduct = ({ onProductAdded }) => {
-  const [title, setTitle] = useState("");
-  const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const initialFormState = {
+    title: "",
+    description: "",
+    author: "",
+    category: "Books",
+    price: "",
+    stock: "",
+    imageUrl: "",
+    isFeatured: false,
+  };
 
-  // Handle form submission
+  const [formData, setFormData] = useState(initialFormState);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccessMessage("");
 
-    // Form validation
-    if (!title || !price || !category || !imageUrl) {
-      setError("All fields are required.");
+    // Clear previous error messages
+    setErrorMessage("");
+
+    // Validation
+    if (!formData.title || !formData.price || !formData.imageUrl) {
+      setErrorMessage(
+        "Please fill out all required fields, including the image URL."
+      );
       return;
     }
 
-    setLoading(true);
-
+    setSubmitting(true);
     try {
-      // Reference to Firestore collection
-      const productsRef = collection(db, "products");
-
-      // Add product to Firestore
-      await addDoc(productsRef, {
-        title,
-        price: parseFloat(price),
-        category,
-        imageUrl,
-        createdAt: serverTimestamp(),
+      // Add product data to Firestore
+      await addDoc(collection(db, "products"), {
+        title: formData.title,
+        description: formData.description,
+        author: formData.author,
+        category: formData.category,
+        price: parseFloat(formData.price),
+        stock: parseInt(formData.stock, 10) || 0,
+        imageUrl: formData.imageUrl,
+        isFeatured: formData.isFeatured,
+        createdAt: new Date(),
       });
 
-      setSuccessMessage("Product added successfully!");
-      setLoading(false);
-
-      // Reset form
-      setTitle("");
-      setPrice("");
-      setCategory("");
-      setImageUrl("");
-
-      // Call callback function to refresh product list
-      if (onProductAdded) onProductAdded();
+      onProductAdded();
+      setFormData(initialFormState); // Reset form data
     } catch (error) {
-      console.error("Error adding product:", error.message);
-      setError("Failed to add product. Please try again.");
-      setLoading(false);
+      console.error("Error adding product:", error);
+      setErrorMessage(`Failed to add product: ${error.message}`);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="add-product-form">
-      <h2>Add New Product</h2>
-      {error && <p className="error-message">{error}</p>}
-      {successMessage && <p className="success-message">{successMessage}</p>}
+    <div className="add-product-container">
+      <form onSubmit={handleSubmit} className="add-product-form container">
+        <h2>Add New Product</h2>
 
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Product Title</label>
+        {/* Error Message */}
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
+
+        <input
+          type="text"
+          placeholder="Title *"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+          required
+        />
+        <textarea
+          placeholder="Description"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          placeholder="Author"
+          name="author"
+          value={formData.author}
+          onChange={handleChange}
+        />
+        <select
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+        >
+          <option value="Books">Books</option>
+          <option value="Courses">Courses</option>
+          <option value="Tools">Tools</option>
+        </select>
+        <input
+          type="number"
+          placeholder="Price *"
+          name="price"
+          value={formData.price}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="number"
+          placeholder="Stock"
+          name="stock"
+          value={formData.stock}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          placeholder="Image URL *"
+          name="imageUrl"
+          value={formData.imageUrl}
+          onChange={handleChange}
+          required
+        />
+        <label>
+          Featured:
           <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter product title"
+            type="checkbox"
+            name="isFeatured"
+            checked={formData.isFeatured}
+            onChange={handleChange}
           />
-        </div>
-
-        <div className="form-group">
-          <label>Price</label>
-          <input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            placeholder="Enter product price"
-            min="0"
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Category</label>
-          <input
-            type="text"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            placeholder="Enter product category"
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Image URL</label>
-          <input
-            type="text"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            placeholder="Enter image URL"
-          />
-        </div>
-
-        <button type="submit" disabled={loading} className="submit-button">
-          {loading ? "Adding Product..." : "Add Product"}
+        </label>
+        <button
+          type="submit"
+          disabled={submitting}
+          className="add-product-button"
+        >
+          {submitting ? "Submitting..." : "Add Product"}
         </button>
       </form>
     </div>

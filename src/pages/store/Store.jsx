@@ -86,7 +86,7 @@ const Store = () => {
             filteredProducts.map((product) => (
               <div key={product.id} className="store-product-card">
                 <img
-                  src={product.imageURL || "https://via.placeholder.com/200"}
+                  src={product.imageUrl || "https://via.placeholder.com/200"}
                   alt={product.title}
                   className="store-product-image"
                 />

@@ -11,7 +11,7 @@ const Home = () => {
       {/* Hero Section */}
       <section className="hero-group container">
         <div className="hero-item">
-          <h1>Achieve Financial Independence</h1>
+          <h1>Master Your Money, Transform Your Life</h1>
           <p>
             Your journey to financial freedom starts here. Discover tools,
             books, and courses to grow your wealth and secure your future.

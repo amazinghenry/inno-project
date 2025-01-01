@@ -27,11 +27,12 @@
   margin-bottom: 1rem;
 }
 
-input {
+.form-group input {
   width: 100%;
-  padding: 8px;
+  padding: 12px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  margin-bottom: 10px;
 }
 
 .error-message {
